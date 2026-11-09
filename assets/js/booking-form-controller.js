@@ -5,7 +5,8 @@ import { renderPaymentCard } from './payment-qr-view.js';
 import { resizeBillImage } from './bill-image-resizer.js';
 import { renderBookingSuccess } from './booking-success-view.js';
 import { attachBillSources, isDesktopPointer } from './bill-input-sources.js';
-import { handoffUrl, takeHandoffDraft, drawHandoffQr } from './phone-handoff.js';
+import { takeHandoffDraft } from './phone-handoff.js';
+import { attachPhoneHandoff } from './phone-handoff-panel.js';
 
 const newRequestId = () =>
   globalThis.crypto?.randomUUID?.() || `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -35,10 +36,11 @@ export function initBookingFlow({ root, source }) {
   const resumeSummary = $('[data-resume-summary]');
   const startedAt = performance.now();
   const state = { slot: null, quote: null, bill: null, paidCode: '', requestId: newRequestId(), carriedFillMs: 0 };
+  let stopPhoneWatch = () => {};
 
   const show = (n, { scroll = true } = {}) => {
     // Leaving the upload step invalidates the phone QR: slot or contact may change before coming back.
-    if (n !== 4) { handoff.open = false; handoffQr.removeAttribute('src'); }
+    if (n !== 4) { handoff.open = false; handoffQr.removeAttribute('src'); stopPhoneWatch(); }
     steps.forEach((step) => { step.hidden = Number(step.dataset.step) !== n; });
     markers.forEach((m) => {
       const k = Number(m.dataset.stepMarker);
@@ -47,6 +49,8 @@ export function initBookingFlow({ root, source }) {
     if (!scroll) return;
     steps.find((step) => Number(step.dataset.step) === n)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
+  /** Step 5, from this computer's own submit or from the phone (seen by the status check). */
+  const finish = (booking) => { renderBookingSuccess(doneBox, booking); show(5); };
   const fillMs = () => Math.max(Math.round(performance.now() - startedAt), state.carriedFillMs);
   const contact = () => {
     const data = new FormData(form);
@@ -128,15 +132,13 @@ export function initBookingFlow({ root, source }) {
 
   if (isDesktopPointer()) {
     $('[data-upload-hint]').textContent = t('Chọn ảnh, kéo thả ảnh vào đây, hoặc dán ảnh bằng Ctrl+V. Trang tự thu nhỏ ảnh trước khi gửi.');
-    handoff.hidden = false;
-    handoff.addEventListener('toggle', async () => {
-      if (!handoff.open || !state.slot) return;
-      const { name, email, purpose } = contact();
-      const draft = { k: state.slot.key, n: name || '', e: email || '', p: purpose || '', c: state.paidCode, r: state.requestId, f: fillMs() };
-      try {
-        await drawHandoffQr(handoffQr, handoffUrl(draft));
-      } catch {
-        $('[data-handoff-text]').textContent = t('Chưa tạo được mã QR. Bạn gửi ảnh qua Zalo hoặc Messenger cho chính mình, rồi dán vào đây bằng Ctrl+V nhé.');
+    stopPhoneWatch = attachPhoneHandoff({
+      panel: handoff, qrImage: handoffQr, textBox: $('[data-handoff-text]'),
+      isOnUploadStep: () => !uploadStep.hidden, onBooked: finish,
+      getDraft: () => {
+        if (!state.slot) return null;
+        const { name, email, purpose } = contact();
+        return { k: state.slot.key, n: name || '', e: email || '', p: purpose || '', c: state.paidCode, r: state.requestId, f: fillMs() };
       }
     });
   }
@@ -152,7 +154,7 @@ export function initBookingFlow({ root, source }) {
     });
     submitButton.disabled = false;
     submitButton.textContent = t('Gửi lịch');
-    if (result.ok) { renderBookingSuccess(doneBox, result); show(5); return; }
+    if (result.ok) { finish(result); return; }
     if (result.slotTaken) {
       state.slot = null;
       await loadSlots(t('Khung giờ vừa có người đặt. Bạn chọn khung khác, không cần chuyển khoản lại, Mo sẽ đối chiếu.'));

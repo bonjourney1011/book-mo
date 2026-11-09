@@ -38,9 +38,11 @@ function doPost(e) {
   return respondJson_(function () {
     var payload = JSON.parse((e && e.postData && e.postData.contents) || '{}');
     if (!payload || typeof payload !== 'object') return { ok: false, error: 'Dữ liệu không hợp lệ.' };
-    var action = payload.action === 'book' ? 'book' : 'quote';
-    var requestId = typeof payload.requestId === 'string' ? payload.requestId.replace(/[^\w-]/g, '').slice(0, 64) : '';
+    var requestId = cleanRequestId(payload.requestId);
     var cache = CacheService.getScriptCache();
+    // Read-only, before the lock: the computer polls this while the phone sends the booking.
+    if (payload.action === 'status') return bookingStatus(requestId, requestId ? cache.get('req_' + requestId) : null);
+    var action = payload.action === 'book' ? 'book' : 'quote';
 
     var lock = LockService.getScriptLock();
     if (!lock.tryLock(10000)) return { ok: false, error: BUSY_MESSAGE };

@@ -83,3 +83,24 @@ function validateBooking(payload, ctx) {
     paidCode: paidCode
   };
 }
+
+/** The page's random request id, reduced to [A-Za-z0-9_-] and 64 chars ('' when missing). */
+function cleanRequestId(value) {
+  return typeof value === 'string' ? value.replace(/[^\w-]/g, '').slice(0, 64) : '';
+}
+
+/**
+ * action 'status': has this request id already booked? cachedJson = the replay cache entry
+ * ('req_' + requestId) saved after a successful booking, or null. Read-only: lets the computer
+ * notice that the phone (same request id, via the handoff QR) sent the booking.
+ */
+function bookingStatus(requestId, cachedJson) {
+  if (!requestId) return fail('Dữ liệu không hợp lệ.');
+  if (!cachedJson) return { ok: true, booked: false };
+  try {
+    var booking = JSON.parse(cachedJson);
+    return booking && booking.ok ? { ok: true, booked: true, booking: booking } : { ok: true, booked: false };
+  } catch (err) {
+    return { ok: true, booked: false };
+  }
+}

@@ -66,7 +66,10 @@ Menu **Book Mo → 📅 Test lịch + email**. Google hỏi thêm quyền Calend
 1. **Triển khai → Tác vụ triển khai mới** → loại **Ứng dụng web** → *Thực thi với tư cách*: **Tôi** → *Người có quyền truy cập*: **Bất kỳ ai** → Triển khai.
 2. Copy URL dạng `https://script.google.com/macros/s/…/exec`. Dán vào trình duyệt phải thấy `{"ok":true,"open":false,…}`.
 3. Dán URL vào `apiUrl` trong `assets/js/site-config.js` **và** vào ô `api_url` ở Config (các nút trong email tổng hợp dùng URL này). Ô `site_url` dán link trang (bước 6).
-4. **Sửa code về sau:** *Triển khai → Quản lý các lần triển khai → ✏️ → Phiên bản: Mới* để giữ nguyên URL.
+4. **Sửa code về sau** (dán lại file `.gs` rồi 💾 Lưu): **Triển khai → Quản lý các lần triển khai** → chọn **đúng bản triển khai có URL trùng với `apiUrl` trong `assets/js/site-config.js`** → bấm ✏️ → *Phiên bản*: **Phiên bản mới** → Triển khai.
+   - Chỉ bấm 💾 Lưu thì trang **vẫn chạy code cũ**: URL `/exec` luôn chạy phiên bản đã chọn trong bản triển khai.
+   - Không bấm *Tác vụ triển khai mới*: cách đó tạo URL mới, trang và các nút trong email tổng hợp vẫn gọi URL cũ.
+   - Kiểm tra: mở URL `/exec` vẫn ra `{"ok":true,…}`; thử đúng tính năng vừa sửa trên trang.
 
 Đổi khung giờ, giá, bật/tắt trong Sheet thì không cần deploy lại; trang cập nhật sau tối đa 30 giây.
 
@@ -105,6 +108,7 @@ Khi đăng link, thêm `?src=fb`, `?src=zalo`… để cột `source` ghi lại 
 | Đổi khung rảnh | Tab Slots: thêm/sửa dòng, bỏ tích `active` để tạm tắt |
 | Nghỉ một ngày cụ thể | Chưa hỗ trợ theo ngày. Tạm bỏ tích khung đó trong tuần, hoặc tự đặt một lịch giả bằng email của bạn rồi Huỷ khi cần mở lại |
 | Duyệt/huỷ | Link trong email 8h sáng. Sửa tay cột `status` cũng trả lại khung giờ nhưng **không** xoá event và **không** email khách |
+| Khách đặt trên máy tính nhưng ảnh bill ở điện thoại | Bước 4 có mã QR mở sẵn lịch trên điện thoại. Điện thoại gửi xong, máy tính tự sang bước cuối: trang hỏi `action: 'status'` mỗi 6 giây trong tối đa 10 phút, chỉ đọc cache, không ghi Sheet, không gửi email |
 | Khách chuyển khoản nhưng khung bị người khác lấy trước | Trang tự cho chọn khung khác, giữ ảnh bill; cột `paid_code` ghi mã đã chuyển, email tổng hợp cảnh báo lệch mã |
 
 - **Không đổi tên tab, không chèn cột vào giữa.** Cột mới chỉ thêm ở cuối tab Bookings.

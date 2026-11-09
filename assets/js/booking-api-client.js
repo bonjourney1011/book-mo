@@ -53,3 +53,10 @@ async function postJson(payload) {
 
 export const requestQuote = (payload) => postJson({ ...payload, action: 'quote' });
 export const submitBooking = (payload) => postJson({ ...payload, action: 'book' });
+
+/** { ok, booked, booking? }: read-only check whether this request id (shared with the phone) already booked. */
+export async function fetchBookingStatus(requestId) {
+  const data = await postJson({ action: 'status', requestId });
+  if (data.booking?.slotLabel) data.booking.slotLabel = localizeSlotLabel(data.booking.slotLabel);
+  return data;
+}

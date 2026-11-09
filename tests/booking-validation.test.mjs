@@ -80,3 +80,23 @@ test('sanitizeCell blocks formulas', () => {
   assert.equal(gs.sanitizeCell('@me'), "'@me");
   assert.equal(gs.sanitizeCell(12), 12);
 });
+
+test('cleanRequestId: keeps [A-Za-z0-9_-], caps at 64 chars, rejects non-strings', () => {
+  assert.equal(gs.cleanRequestId('ab12-cd_34<script>'), 'ab12-cd_34script');
+  assert.equal(gs.cleanRequestId('x'.repeat(80)).length, 64);
+  assert.equal(gs.cleanRequestId(42), '');
+  assert.equal(gs.cleanRequestId(undefined), '');
+});
+
+test('status: booked only when the replay cache holds a successful booking', () => {
+  const saved = JSON.stringify({ ok: true, bookingCode: 'MO1411-1000', slotLabel: 'Thứ 7 14/11 · 10:00–10:45', email: 'lan@example.com' });
+  const booked = gs.bookingStatus('req-1', saved);
+  assert.equal(booked.ok, true);
+  assert.equal(booked.booked, true);
+  assert.equal(booked.booking.bookingCode, 'MO1411-1000');
+
+  assert.deepEqual({ ...gs.bookingStatus('req-1', null) }, { ok: true, booked: false });
+  assert.deepEqual({ ...gs.bookingStatus('req-1', '{broken') }, { ok: true, booked: false });
+  assert.deepEqual({ ...gs.bookingStatus('req-1', JSON.stringify({ ok: false, error: 'x' })) }, { ok: true, booked: false });
+  assert.equal(gs.bookingStatus('', saved).ok, false);
+});
