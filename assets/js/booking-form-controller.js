@@ -1,3 +1,4 @@
+import { t } from './ui-text.js';
 import { fetchSlots, requestQuote, submitBooking } from './booking-api-client.js';
 import { renderSlotPicker } from './slot-picker.js';
 import { renderPaymentCard } from './payment-qr-view.js';
@@ -53,14 +54,14 @@ export function initBookingFlow({ root, source }) {
   };
 
   async function loadSlots(message) {
-    slotStatus.textContent = message || 'Đang tải khung giờ trống…';
+    slotStatus.textContent = message || t('Đang tải khung giờ trống…');
     slotsBox.replaceChildren();
     const data = await fetchSlots();
     // The landing hero shows the nearest free slot from the same response (no second request).
     root.dispatchEvent(new CustomEvent('slots-loaded', { detail: data }));
-    if (!data) { slotStatus.textContent = 'Chưa tải được lịch. Bạn tải lại trang hoặc nhắn Mo nhé.'; return; }
-    if (!data.open) { slotStatus.textContent = 'Mo đang tạm đóng lịch. Bạn ghé lại sau nhé.'; return; }
-    slotStatus.textContent = message || `Mỗi buổi ${data.slotMinutes} phút. Bạn chọn ngày rồi chọn giờ.`;
+    if (!data) { slotStatus.textContent = t('Chưa tải được lịch. Bạn tải lại trang hoặc nhắn Mo nhé.'); return; }
+    if (!data.open) { slotStatus.textContent = t('Mo đang tạm đóng lịch. Bạn ghé lại sau nhé.'); return; }
+    slotStatus.textContent = message || t('Mỗi buổi {n} phút. Bạn chọn ngày rồi chọn giờ.', { n: data.slotMinutes });
     renderSlotPicker(slotsBox, data.days, (slot) => {
       state.slot = slot;
       // A new slot is a new booking: a replayed id must never return an older slot's answer.
@@ -93,10 +94,10 @@ export function initBookingFlow({ root, source }) {
     resumeSummary.hidden = true;
     const button = form.querySelector('[data-quote]');
     button.disabled = true;
-    button.textContent = 'Đang kiểm tra khung giờ…';
+    button.textContent = t('Đang kiểm tra khung giờ…');
     const ready = await quote();
     button.disabled = false;
-    button.textContent = 'Tiếp tục';
+    button.textContent = t('Tiếp tục');
     if (ready) show(3);
   });
 
@@ -115,18 +116,18 @@ export function initBookingFlow({ root, source }) {
       preview.hidden = false;
     } catch (error) {
       billError.textContent = error.message === 'too-large'
-        ? 'Ảnh quá lớn. Bạn chụp màn hình rồi chọn lại nhé.'
-        : 'Ảnh không đọc được. Bạn chụp màn hình rồi chọn lại nhé.';
+        ? t('Ảnh quá lớn. Bạn chụp màn hình rồi chọn lại nhé.')
+        : t('Ảnh không đọc được. Bạn chụp màn hình rồi chọn lại nhé.');
     }
     fileInput.value = '';
   }
   attachBillSources({
     dropZone: $('[data-bill-drop]'), fileInput, isActive: () => !uploadStep.hidden, onFile: useBillFile,
-    onReject: () => { billError.textContent = 'File này không phải ảnh. Bạn chọn ảnh JPG hoặc PNG nhé.'; }
+    onReject: () => { billError.textContent = t('File này không phải ảnh. Bạn chọn ảnh JPG hoặc PNG nhé.'); }
   });
 
   if (isDesktopPointer()) {
-    $('[data-upload-hint]').textContent = 'Chọn ảnh, kéo thả ảnh vào đây, hoặc dán ảnh bằng Ctrl+V. Trang tự thu nhỏ ảnh trước khi gửi.';
+    $('[data-upload-hint]').textContent = t('Chọn ảnh, kéo thả ảnh vào đây, hoặc dán ảnh bằng Ctrl+V. Trang tự thu nhỏ ảnh trước khi gửi.');
     handoff.hidden = false;
     handoff.addEventListener('toggle', async () => {
       if (!handoff.open || !state.slot) return;
@@ -135,26 +136,26 @@ export function initBookingFlow({ root, source }) {
       try {
         await drawHandoffQr(handoffQr, handoffUrl(draft));
       } catch {
-        $('[data-handoff-text]').textContent = 'Chưa tạo được mã QR. Bạn gửi ảnh qua Zalo hoặc Messenger cho chính mình, rồi dán vào đây bằng Ctrl+V nhé.';
+        $('[data-handoff-text]').textContent = t('Chưa tạo được mã QR. Bạn gửi ảnh qua Zalo hoặc Messenger cho chính mình, rồi dán vào đây bằng Ctrl+V nhé.');
       }
     });
   }
 
   submitButton.addEventListener('click', async () => {
     billError.textContent = '';
-    if (!state.bill) { billError.textContent = 'Bạn chọn ảnh chụp màn hình chuyển khoản trước nhé.'; return; }
+    if (!state.bill) { billError.textContent = t('Bạn chọn ảnh chụp màn hình chuyển khoản trước nhé.'); return; }
     submitButton.disabled = true;
-    submitButton.textContent = 'Đang gửi…';
+    submitButton.textContent = t('Đang gửi…');
     const result = await submitBooking({
       requestId: state.requestId, slot: state.slot.key, ...contact(),
       billBase64: state.bill.base64, billMime: state.bill.mime, paidCode: state.paidCode, fillMs: fillMs(), source
     });
     submitButton.disabled = false;
-    submitButton.textContent = 'Gửi lịch';
+    submitButton.textContent = t('Gửi lịch');
     if (result.ok) { renderBookingSuccess(doneBox, result); show(5); return; }
     if (result.slotTaken) {
       state.slot = null;
-      await loadSlots('Khung giờ vừa có người đặt. Bạn chọn khung khác, không cần chuyển khoản lại, Mo sẽ đối chiếu.');
+      await loadSlots(t('Khung giờ vừa có người đặt. Bạn chọn khung khác, không cần chuyển khoản lại, Mo sẽ đối chiếu.'));
       show(1);
       return;
     }
@@ -175,9 +176,9 @@ export function initBookingFlow({ root, source }) {
     // Same request id as the computer: if both devices send, the server keeps one booking.
     state.requestId = draft.r || state.requestId;
     state.carriedFillMs = draft.f;
-    slotStatus.textContent = 'Đang mở lịch bạn đặt trên máy tính…';
+    slotStatus.textContent = t('Đang mở lịch bạn đặt trên máy tính…');
     root.scrollIntoView({ block: 'start' });
-    const ready = await quote('Khung giờ này đã có lịch. Nếu bạn vừa gửi lịch trên máy tính thì lịch đã được giữ, bạn xem email nhé. Nếu chưa, bạn chọn khung khác.');
+    const ready = await quote(t('Khung giờ này đã có lịch. Nếu bạn vừa gửi lịch trên máy tính thì lịch đã được giữ, bạn xem email nhé. Nếu chưa, bạn chọn khung khác.'));
     // The visitor tapped another slot while the quote was loading: their new choice wins.
     if (!ready || state.slot?.key !== draft.k) return;
     // Labels come from the server, never from the link, so a crafted link cannot put its own text here.
@@ -185,7 +186,7 @@ export function initBookingFlow({ root, source }) {
     chosenText.textContent = state.quote.slotLabel;
     $('[data-resume-text]').textContent = `${state.quote.slotLabel} · ${draft.e}`;
     resumeSummary.hidden = false;
-    if (!draft.p) { formError.textContent = 'Bạn viết lại vài dòng về điều muốn trao đổi rồi bấm Tiếp tục nhé.'; show(2); return; }
+    if (!draft.p) { formError.textContent = t('Bạn viết lại vài dòng về điều muốn trao đổi rồi bấm Tiếp tục nhé.'); show(2); return; }
     show(4, { scroll: false });
   }
 

@@ -96,6 +96,27 @@ strong { font-weight: 600; }
   background: radial-gradient(120% 70% at 80% 0%, var(--accent-soft) 0%, transparent 60%), var(--paper-raised);
 }
 .hero__banner { width: 100%; height: auto; border-radius: 24px; border: 1px solid var(--rule); box-shadow: var(--shadow); }
+.hero__top { display: flex; justify-content: flex-end; margin: -6px 0 10px; }
+.lang-switch {
+  display: inline-flex; align-items: center; min-height: 34px; padding: 4px 14px; border: 1.5px solid var(--rule); border-radius: 999px;
+  background: #fff; font-size: .85rem; font-weight: 600; text-decoration: none; color: var(--accent-deep);
+}
+.lang-switch:hover { border-color: var(--accent); }
+/* Text hero (English page): headline + topic stickers beside the portrait, same look as the banner */
+.hero__art {
+  display: grid; gap: 8px 24px; align-items: end; padding: 24px 22px 0; overflow: hidden;
+  background: #f6f3ed; border: 1px solid var(--rule); border-radius: 24px; box-shadow: var(--shadow);
+}
+.hero__eyebrow { margin: 0 0 12px; font-size: .85rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.hero__title { margin: 0 0 20px; font: 600 clamp(2rem, 5.4vw, 3.2rem)/1.12 var(--font-display); letter-spacing: -.015em; text-wrap: balance; }
+.hero__chips { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; padding: 0; }
+.hero__chips li { padding: 5px 12px; background: #fffdf8; border: 2px solid var(--accent); border-radius: 16px; font-weight: 600; font-size: .8rem; color: var(--accent-deep); box-shadow: 3px 3px 0 var(--accent-soft); }
+.hero__portrait { width: 100%; height: auto; }
+/* Phones: portrait sits beside the stacked topic stickers so the CTA stays in the first screen */
+.hero__art { grid-template-columns: 1fr 42%; }
+.hero__art > div { display: contents; }
+.hero__eyebrow, .hero__title { grid-column: 1 / -1; }
+.hero__chips { flex-direction: column; align-items: flex-start; align-self: center; margin-bottom: 20px; }
 .hero__bar {
   position: relative; display: grid; gap: 18px; margin: 16px 0 0; padding: 20px;
   background: #fff; border: 1px solid var(--rule); border-radius: 22px; box-shadow: var(--shadow-lift);
@@ -133,6 +154,10 @@ strong { font-weight: 600; }
   .hero { padding-top: 32px; }
   .hero__bar { grid-template-columns: 1fr auto; align-items: center; gap: 28px; margin: -36px 32px 0; padding: 24px 28px; }
   .footer { padding-bottom: 40px; }
+  .hero__art { grid-template-columns: 1fr 34%; padding: 48px 0 0 48px; }
+  .hero__art > div { display: block; padding-bottom: 72px; }
+  .hero__chips { flex-direction: row; gap: 10px; margin-bottom: 24px; }
+  .hero__chips li { padding: 8px 16px; font-size: .92rem; border-radius: 18px; }
 }
 @media (min-width: 960px) {
   .cards { grid-template-columns: repeat(3, 1fr); }

@@ -1,3 +1,4 @@
+import { t } from './ui-text.js';
 import { el } from './dom-and-format-helpers.js';
 
 /**
@@ -6,13 +7,13 @@ import { el } from './dom-and-format-helpers.js';
  */
 export function renderSlotPicker(container, days, onSelect) {
   if (!days.length) {
-    container.replaceChildren(el('p', { class: 'slots__empty', text: 'Hai tuần tới Mo chưa có khung trống. Bạn ghé lại sau nhé.' }));
+    container.replaceChildren(el('p', { class: 'slots__empty', text: t('Hai tuần tới Mo chưa có khung trống. Bạn ghé lại sau nhé.') }));
     return;
   }
   let activeDay = days[0];
   let selectedKey = '';
-  const tabs = el('div', { class: 'day-tabs', role: 'group', 'aria-label': 'Chọn ngày' });
-  const chips = el('div', { class: 'slot-chips', role: 'group', 'aria-label': 'Chọn giờ' });
+  const tabs = el('div', { class: 'day-tabs', role: 'group', 'aria-label': t('Chọn ngày') });
+  const chips = el('div', { class: 'slot-chips', role: 'group', 'aria-label': t('Chọn giờ') });
 
   const renderChips = () => {
     chips.replaceChildren(...activeDay.slots.map((slot) => {
@@ -38,7 +39,7 @@ export function renderSlotPicker(container, days, onSelect) {
         type: 'button', class: 'day-tab',
         'aria-pressed': day === activeDay ? 'true' : 'false'
       }, el('span', { class: 'day-tab__weekday', text: weekday }), el('span', { class: 'day-tab__date', text: date }),
-        el('span', { class: 'day-tab__count', text: `${day.slots.length} khung` }));
+        el('span', { class: 'day-tab__count', text: t('{n} khung', { n: day.slots.length }) }));
       tab.addEventListener('click', () => { activeDay = day; renderTabs(); renderChips(); });
       return tab;
     }));

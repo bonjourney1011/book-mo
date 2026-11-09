@@ -5,7 +5,8 @@
  * Bank details are never put in the link: a crafted link must not be able to show another account.
  */
 const HASH_PREFIX = '#tiep=';
-const QR_SCRIPT = 'assets/vendor/qrcode-generator-1.4.4.js';
+// Resolved from this module, so it works from /book-mo/ and /book-mo/en/ alike.
+const QR_SCRIPT = new URL('../vendor/qrcode-generator-1.4.4.js', import.meta.url).href;
 const TEXT_LIMITS = { k: 16, n: 80, e: 120, p: 600, c: 20, r: 64 };
 // Past this the QR gets too dense to read off a monitor; the purpose is dropped and retyped on the phone.
 const MAX_URL_CHARS = 1400;

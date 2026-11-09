@@ -1,6 +1,8 @@
+import { t, LANG } from './ui-text.js';
 // Small shared helpers. All dynamic text goes through textContent, never innerHTML.
 
-export const formatVnd = (amount) =>
+export const formatVnd = (amount) => LANG === 'en'
+  ? `${Math.round(Number(amount) || 0).toLocaleString('en-US')} VND` :
   `${String(Math.round(Number(amount) || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}đ`;
 
 export const formatPriceShort = (amount) =>
@@ -31,9 +33,9 @@ export async function copyText(text, button) {
   const original = button.textContent;
   try {
     await navigator.clipboard.writeText(text);
-    button.textContent = 'Đã chép ✓';
+    button.textContent = t('Đã chép ✓');
   } catch {
-    button.textContent = 'Chép thủ công nhé';
+    button.textContent = t('Chép thủ công nhé');
   }
   setTimeout(() => { button.textContent = original; }, 1800);
 }

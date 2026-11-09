@@ -1,3 +1,4 @@
+import { t } from './ui-text.js';
 import { SITE_CONFIG, messengerUrl } from './site-config.js';
 import { isApiConfigured } from './booking-api-client.js';
 import { initBookingFlow } from './booking-form-controller.js';
@@ -20,6 +21,6 @@ initLandingMotion(booking);
 if (isApiConfigured()) {
   initBookingFlow({ root: booking, source });
 } else {
-  booking.querySelector('[data-slots-status]').textContent = 'Trang đặt lịch chưa mở. Bạn nhắn Mo qua Messenger nhé.';
+  booking.querySelector('[data-slots-status]').textContent = t('Trang đặt lịch chưa mở. Bạn nhắn Mo qua Messenger nhé.');
   booking.querySelectorAll('[data-step]').forEach((step, index) => { step.hidden = index !== 0; });
 }

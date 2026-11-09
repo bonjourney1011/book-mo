@@ -1,8 +1,9 @@
 import { SITE_CONFIG } from './site-config.js';
+import { t, localizeSlotLabel } from './ui-text.js';
 
 // Generous: a cold Apps Script start + lock wait + Drive upload can take 20 s+.
 const TIMEOUT_MS = 60000;
-const NETWORK_ERROR = 'Mạng chập chờn hoặc hệ thống đang bận. Bạn thử lại sau ít phút nhé.';
+const NETWORK_ERROR = t('Mạng chập chờn hoặc hệ thống đang bận. Bạn thử lại sau ít phút nhé.');
 
 async function callApi(options = {}) {
   const controller = new AbortController();
@@ -23,7 +24,9 @@ export async function fetchSlots() {
   if (!isApiConfigured()) return null;
   try {
     const data = await callApi();
-    return data && data.ok ? data : null;
+    if (!data || !data.ok) return null;
+    (data.days || []).forEach((day) => { day.label = localizeSlotLabel(day.label); });
+    return data;
   } catch (error) {
     console.warn('Không tải được lịch trống', error);
     return null;
@@ -37,7 +40,11 @@ export async function fetchSlots() {
 async function postJson(payload) {
   try {
     const data = await callApi({ method: 'POST', body: JSON.stringify(payload) });
-    return data && typeof data.ok === 'boolean' ? data : { ok: false, error: NETWORK_ERROR };
+    if (!data || typeof data.ok !== 'boolean') return { ok: false, error: NETWORK_ERROR };
+    // One place to localize what the server says: error text and the slot label.
+    if (data.error) data.error = t(data.error);
+    if (data.slotLabel) data.slotLabel = localizeSlotLabel(data.slotLabel);
+    return data;
   } catch (error) {
     console.warn('Gửi lỗi', error);
     return { ok: false, error: NETWORK_ERROR };

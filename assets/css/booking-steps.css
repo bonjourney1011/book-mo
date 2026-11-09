@@ -93,3 +93,4 @@ textarea.field__input { resize: vertical; min-height: 110px; }
 .done__code { margin: 0 0 16px; color: var(--ink-soft); }
 .done__steps { text-align: left; margin: 0 0 18px; padding-left: 22px; color: var(--ink-soft); }
 .done__steps li + li { margin-top: 6px; }
+.booking__note { margin-top: -14px; font-size: .92rem; }

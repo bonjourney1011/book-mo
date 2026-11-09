@@ -8,6 +8,8 @@ Trang để người khác đặt 45 phút nói chuyện với Mo: chọn giờ 
 
 ```
 index.html                 trang chính (giới thiệu + 5 bước đặt lịch)
+en/index.html              bản tiếng Anh, dùng chung CSS/JS; sửa nội dung ở đây khi sửa bản tiếng Việt
+assets/js/ui-text-en.js    câu tiếng Anh cho phần đặt lịch và lỗi từ server (khoá = câu tiếng Việt)
 assets/js/site-config.js   ← chỗ duy nhất cần sửa phía trang (URL API, link portfolio, Mo Beauty, Messenger)
 apps-script/               code dán vào Google Apps Script
 tests/                     test logic chia khung giờ + kiểm tra form (npm test)

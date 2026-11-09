@@ -1,3 +1,4 @@
+import { t } from './ui-text.js';
 /**
  * Landing polish: scroll reveal, the phone sticky CTA, and the "nearest free slot" line in the hero.
  * Everything degrades to a static page when IntersectionObserver is missing.
@@ -52,7 +53,7 @@ function nearestSlot(bookingRoot) {
     const day = data?.open ? data.days?.[0] : null;
     if (!day?.slots?.length) { line.hidden = true; return; }
     const total = data.days.reduce((sum, d) => sum + d.slots.length, 0);
-    text.textContent = `Lịch trống gần nhất: ${day.label}, ${day.slots[0].label.split('–')[0]} · còn ${total} khung trống`;
+    text.textContent = t('Lịch trống gần nhất: {day}, {time} · còn {n} khung trống', { day: day.label, time: day.slots[0].label.split('–')[0], n: total });
     line.hidden = false;
   });
 }
