@@ -6,6 +6,9 @@ import { initBookingFlow } from './booking-form-controller.js';
 const source = (new URLSearchParams(location.search).get('src') || '').replace(/[^a-z0-9_-]/gi, '').slice(0, 30);
 
 document.querySelectorAll('[data-portfolio-link]').forEach((link) => { link.href = SITE_CONFIG.portfolioUrl; });
+document.querySelectorAll('[data-beauty-link]').forEach((link) => {
+  if (SITE_CONFIG.beautyUrl) link.href = SITE_CONFIG.beautyUrl; else link.hidden = true;
+});
 const messenger = messengerUrl();
 document.querySelectorAll('[data-messenger-link]').forEach((link) => {
   if (messenger) link.href = messenger; else link.hidden = true;

@@ -8,7 +8,7 @@ Trang để người khác đặt 45 phút nói chuyện với Mo: chọn giờ 
 
 ```
 index.html                 trang chính (giới thiệu + 5 bước đặt lịch)
-assets/js/site-config.js   ← chỗ duy nhất cần sửa phía trang (URL API, link portfolio, Messenger)
+assets/js/site-config.js   ← chỗ duy nhất cần sửa phía trang (URL API, link portfolio, Mo Beauty, Messenger)
 apps-script/               code dán vào Google Apps Script
 tests/                     test logic chia khung giờ + kiểm tra form (npm test)
 ```

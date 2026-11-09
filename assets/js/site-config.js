@@ -4,6 +4,8 @@ export const SITE_CONFIG = {
   apiUrl: 'https://script.google.com/macros/s/AKfycbzjZYis9g5J08bjD29UHfimOcgnYV29U6W_5GUxyF2-muvbdJC02xUKSrWKPQsPzDBk/exec',
   // Portfolio link shown in the intro
   portfolioUrl: 'https://bonjourney1011.github.io/',
+  // Mo Beauty Analyst link on the skincare card; empty = link hidden (set it once the site is public)
+  beautyUrl: '',
   // Facebook username for https://m.me/<username>; empty = no Messenger button
   messengerUsername: 'thuanbon.mo'
 };
