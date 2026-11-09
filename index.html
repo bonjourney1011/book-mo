@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Đặt 45 phút nói chuyện với Mo</title>
+  <meta name="description" content="Một cuộc gọi riêng 45 phút với Mo, 100.000đ. Về data, chuyển ngành, kinh doanh nhỏ, hoặc chỉ cần một người lắng nghe.">
+  <meta property="og:title" content="Đặt 45 phút nói chuyện với Mo">
+  <meta property="og:description" content="Chọn giờ, chuyển khoản 100k, gửi ảnh bill. Mo xác nhận trong 24 giờ. Kín tiếng.">
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Lora:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base-tokens-and-intro.css">
+  <link rel="stylesheet" href="assets/css/booking-steps.css">
+</head>
+<body>
+  <a class="skip-link" href="#dat-lich">Tới phần đặt lịch</a>
+
+  <header class="intro">
+    <div class="wrap intro__inner">
+      <p class="intro__eyebrow">Mo Thuần · Data Analyst</p>
+      <h1 class="intro__title">Đặt 45 phút nói chuyện với Mo</h1>
+      <p class="intro__lede">Một cuộc gọi riêng, <strong>100.000đ</strong>. Bạn chọn giờ, chuyển khoản, gửi ảnh chuyển khoản và viết vài dòng về điều muốn trao đổi. Mo xác nhận trong 24 giờ.</p>
+      <div class="intro__actions">
+        <a class="btn btn--ink" href="#dat-lich">Chọn giờ</a>
+        <a class="btn btn--ghost" href="#" data-portfolio-link target="_blank" rel="noopener">Xem Mo đã làm gì</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="wrap section" aria-labelledby="giup-gi">
+      <h2 id="giup-gi" class="section__title">Mo giúp được gì</h2>
+      <div class="cards">
+        <article class="card">
+          <h3 class="card__title">Đọc số liệu kinh doanh</h3>
+          <p>Bạn có file bán hàng, Mo chỉ bạn cách nhìn ra điều gì đang kéo số lên hay xuống. Mo làm việc này hằng ngày với dữ liệu thương mại điện tử và tài chính.</p>
+        </article>
+        <article class="card">
+          <h3 class="card__title">Chuyển ngành sang data</h3>
+          <p>Lộ trình học, portfolio, CV và câu hỏi phỏng vấn. Mo đi từ kinh tế tài chính sang data, nên biết chỗ nào nên bỏ qua.</p>
+        </article>
+        <article class="card">
+          <h3 class="card__title">Dashboard và báo cáo</h3>
+          <p>Power BI, SQL, dbt. Bạn mang báo cáo đang kẹt, Mo góp ý cách thiết kế hoặc gỡ chỗ sai.</p>
+        </article>
+        <article class="card">
+          <h3 class="card__title">Trang web nhỏ bằng công cụ miễn phí</h3>
+          <p>Mo tự dựng trang bán hàng và trang đặt lịch này bằng GitHub Pages và Google Sheet, không tốn tiền hosting. Mo chia sẻ cách làm.</p>
+        </article>
+      </div>
+
+      <div class="listen">
+        <h3 class="listen__title">Hoặc bạn chỉ cần một người lắng nghe</h3>
+        <p>Không cần chủ đề. Không cần chuẩn bị. Mo nghe, hỏi lại khi bạn muốn, và không khuyên nếu bạn không hỏi.</p>
+      </div>
+
+      <p class="quiet"><strong>Kín tiếng.</strong> Mo không ghi âm, không ghi chép lại nội dung, không kể với ai. Sau buổi nói chuyện, Mo chỉ giữ tên, email và giờ hẹn để đối chiếu thanh toán.</p>
+    </section>
+
+    <section id="dat-lich" class="wrap section booking" data-booking aria-labelledby="dat-lich-title">
+      <h2 id="dat-lich-title" class="section__title">Đặt lịch</h2>
+      <ol class="stepper" aria-label="Các bước">
+        <li class="stepper__item" data-step-marker="1">Chọn giờ</li>
+        <li class="stepper__item" data-step-marker="2">Thông tin</li>
+        <li class="stepper__item" data-step-marker="3">Chuyển khoản</li>
+        <li class="stepper__item" data-step-marker="4">Gửi ảnh</li>
+        <li class="stepper__item" data-step-marker="5">Xong</li>
+      </ol>
+
+      <div class="step" data-step="1">
+        <p class="step__status" data-slots-status aria-live="polite">Đang tải khung giờ trống…</p>
+        <div class="slots" data-slots></div>
+      </div>
+
+      <form class="step" data-step="2" data-booking-form novalidate>
+        <p class="step__chosen">Khung giờ: <strong data-chosen-slot></strong> <button type="button" class="link-btn" data-back="1">Đổi giờ</button></p>
+        <label class="field">
+          <span class="field__label">Tên của bạn</span>
+          <input class="field__input" name="name" type="text" maxlength="80" required autocomplete="name">
+        </label>
+        <label class="field">
+          <span class="field__label">Email</span>
+          <input class="field__input" name="email" type="email" maxlength="120" required autocomplete="email" inputmode="email">
+          <span class="field__hint">Mo gửi lời mời lịch và xác nhận qua email này.</span>
+        </label>
+        <label class="field">
+          <span class="field__label">Bạn muốn trao đổi điều gì</span>
+          <textarea class="field__input" name="purpose" rows="4" maxlength="600" minlength="3" required placeholder="Vài dòng là đủ. Nếu chỉ muốn được lắng nghe, bạn ghi vậy cũng được."></textarea>
+        </label>
+        <label class="trap" aria-hidden="true"><span>Website</span><input name="website" type="text" tabindex="-1" autocomplete="off"></label>
+        <p class="form-error" data-form-error role="alert"></p>
+        <button class="btn btn--ink btn--block" type="submit" data-quote>Tiếp tục</button>
+      </form>
+
+      <div class="step" data-step="3">
+        <div class="pay" data-payment></div>
+        <button class="btn btn--ink btn--block" type="button" data-paid>Tôi đã chuyển khoản</button>
+        <button type="button" class="link-btn link-btn--center" data-back="2">Quay lại sửa thông tin</button>
+      </div>
+
+      <div class="step" data-step="4">
+        <label class="upload">
+          <span class="upload__title">Ảnh chụp màn hình chuyển khoản</span>
+          <span class="upload__hint">JPG, PNG hoặc ảnh chụp màn hình. Trang tự thu nhỏ ảnh trước khi gửi.</span>
+          <input class="upload__input" type="file" accept="image/*" data-bill-file>
+        </label>
+        <img class="upload__preview" alt="Ảnh chuyển khoản bạn vừa chọn" data-bill-preview hidden>
+        <p class="form-error" data-bill-error role="alert"></p>
+        <button class="btn btn--ink btn--block" type="button" data-submit>Gửi lịch</button>
+        <button type="button" class="link-btn link-btn--center" data-back="3">Xem lại mã QR</button>
+      </div>
+
+      <div class="step" data-step="5" data-done></div>
+    </section>
+
+    <section class="wrap section faq" aria-labelledby="hoi-nhanh">
+      <h2 id="hoi-nhanh" class="section__title">Hỏi nhanh</h2>
+      <dl class="faq__list">
+        <dt>Gọi bằng gì?</dt>
+        <dd>Google Meet. Link gặp nằm trong email xác nhận của Mo.</dd>
+        <dt>Sao phải chuyển khoản trước?</dt>
+        <dd>Để cả hai giữ đúng giờ đã hẹn. Nếu Mo bận đột xuất, Mo hoàn tiền hoặc xếp lại giờ cho bạn.</dd>
+        <dt>Mo kiểm tra ảnh chuyển khoản khi nào?</dt>
+        <dd>Mỗi sáng. Vì vậy bạn cần đặt trước ít nhất 1 ngày.</dd>
+        <dt>Cần đổi giờ?</dt>
+        <dd>Reply email xác nhận hoặc nhắn Mo. Đổi trước 12 giờ là được.</dd>
+      </dl>
+    </section>
+  </main>
+
+  <footer class="footer wrap">
+    <p>Mo Thuần · <a href="#" data-portfolio-link target="_blank" rel="noopener">Portfolio</a> · <a href="#" data-messenger-link target="_blank" rel="noopener">Messenger</a></p>
+  </footer>
+
+  <script type="module" src="assets/js/app-main.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "book-mo",
+  "private": true,
+  "description": "Book Mo: trang đặt lịch nói chuyện 1:1 với Mo (GitHub Pages + Google Apps Script)",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "serve": "npx --yes serve -l 4173 ."
+  }
+}
