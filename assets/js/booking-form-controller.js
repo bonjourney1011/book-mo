@@ -56,6 +56,8 @@ export function initBookingFlow({ root, source }) {
     slotStatus.textContent = message || 'Đang tải khung giờ trống…';
     slotsBox.replaceChildren();
     const data = await fetchSlots();
+    // The landing hero shows the nearest free slot from the same response (no second request).
+    root.dispatchEvent(new CustomEvent('slots-loaded', { detail: data }));
     if (!data) { slotStatus.textContent = 'Chưa tải được lịch. Bạn tải lại trang hoặc nhắn Mo nhé.'; return; }
     if (!data.open) { slotStatus.textContent = 'Mo đang tạm đóng lịch. Bạn ghé lại sau nhé.'; return; }
     slotStatus.textContent = message || `Mỗi buổi ${data.slotMinutes} phút. Bạn chọn ngày rồi chọn giờ.`;

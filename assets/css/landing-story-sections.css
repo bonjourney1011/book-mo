@@ -1,0 +1,89 @@
+/* Story sections between hero and booking: pains, who Mo is, 45-minute timeline, promise, FAQ, final CTA, sticky bar. */
+
+/* Pains: speech-bubble stickers like the banner */
+.pains { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.pain {
+  position: relative; padding: 16px 20px; background: #fff; border: 2px solid var(--accent); border-radius: 20px;
+  font-weight: 500; line-height: 1.5; box-shadow: 4px 4px 0 var(--accent-soft);
+}
+.pain::after {
+  content: ''; position: absolute; left: 26px; bottom: -9px; width: 14px; height: 14px;
+  background: #fff; border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(45deg);
+}
+.pain--soft { border-style: dashed; color: var(--accent-deep); }
+.pain--soft::after { display: none; }
+.turn {
+  margin: 36px 0 0; max-width: 34ch; font: 500 italic clamp(1.25rem, 3.2vw, 1.6rem)/1.4 var(--font-display); color: var(--accent-deep);
+}
+
+/* Who Mo is */
+.story { display: grid; gap: 28px; }
+.story__title { margin: 0; font: 500 italic clamp(1.5rem, 4vw, 2.2rem)/1.3 var(--font-display); color: var(--accent-deep); text-wrap: balance; }
+.story__body p { margin: 0 0 14px; color: var(--ink-soft); font-size: 1.05rem; }
+.creds { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 22px; padding: 0; }
+.creds li { padding: 6px 14px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-deep); font-size: .88rem; font-weight: 600; }
+
+/* 45-minute timeline */
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: t; }
+.timeline__item {
+  position: relative; padding: 20px 22px 20px 64px; background: var(--paper); border: 1.5px solid var(--rule); border-radius: var(--radius);
+}
+.timeline__item::before {
+  counter-increment: t; content: counter(t); position: absolute; left: 18px; top: 20px;
+  display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%;
+  background: var(--accent); color: #fff; font-weight: 700; font-size: .95rem;
+}
+.timeline__time { display: block; font-size: .8rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-bright); }
+.timeline__item strong { display: block; margin: 2px 0 4px; font: 600 1.15rem/1.3 var(--font-display); }
+.timeline__item p { margin: 0; color: var(--ink-soft); }
+.timeline__note { margin: 22px 0 0; font-weight: 500; color: var(--accent-deep); }
+
+/* Promise band */
+.promise { padding-block: 64px; background: var(--accent-deep); color: #eef6f4; }
+.promise__inner { display: grid; gap: 28px; }
+.promise__title { margin: 0 0 10px; font: 600 clamp(1.5rem, 4vw, 2.1rem)/1.25 var(--font-display); color: #fff; }
+.promise p { margin: 0; max-width: 46ch; font-size: 1.05rem; color: #cfe3df; }
+.promise__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.promise__list li { display: flex; gap: 12px; align-items: flex-start; font-weight: 500; }
+.promise__list .icon { margin-top: 3px; padding: 3px; width: 24px; height: 24px; border-radius: 50%; background: rgba(255, 255, 255, .14); stroke-width: 2.6; }
+
+/* FAQ accordion */
+.faq__item { border-bottom: 1px solid var(--rule); }
+.faq__item summary {
+  display: flex; justify-content: space-between; gap: 16px; padding: 16px 0; cursor: pointer;
+  font-weight: 600; list-style: none;
+}
+.faq__item summary::-webkit-details-marker { display: none; }
+.faq__item summary::after { content: '+'; font-size: 1.4rem; line-height: 1; color: var(--accent); transition: transform .3s var(--ease); }
+.faq__item[open] summary::after { transform: rotate(45deg); }
+.faq__item p { margin: 0 0 16px; color: var(--ink-soft); }
+
+/* Final CTA */
+.final-cta { margin-top: 40px; padding-block: 72px; background: radial-gradient(100% 120% at 0% 0%, var(--accent-bright) 0%, var(--accent-deep) 70%); color: #fff; text-align: center; }
+.final-cta__inner { display: grid; justify-items: center; gap: 22px; }
+.final-cta__title { margin: 0; max-width: 22ch; font: 600 clamp(1.6rem, 4.6vw, 2.5rem)/1.25 var(--font-display); text-wrap: balance; }
+.final-cta__meta { margin: 0; font-size: .92rem; color: #cfe3df; }
+
+/* Sticky CTA on phones: shows once the hero button is off screen, hides near the booking form */
+.sticky-cta {
+  position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 10px 10px 18px;
+  background: rgba(255, 253, 249, .94); backdrop-filter: blur(8px); border: 1px solid var(--rule); border-radius: 18px; box-shadow: var(--shadow-lift);
+  transform: translateY(140%); transition: transform .45s var(--ease);
+}
+.sticky-cta.is-shown { transform: none; }
+.sticky-cta__text { font-size: .95rem; color: var(--ink-soft); }
+
+@media (min-width: 640px) {
+  .pains { grid-template-columns: 1fr 1fr; gap: 22px 18px; }
+  .story { grid-template-columns: 5fr 6fr; gap: 56px; align-items: start; }
+  .story__quote { position: sticky; top: 32px; }
+  .timeline { grid-template-columns: repeat(3, 1fr); }
+  .promise { padding-block: 80px; }
+  .promise__inner { grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .final-cta { padding-block: 96px; }
+  .sticky-cta { display: none; }
+}
+@media (min-width: 960px) {
+  .pains { grid-template-columns: repeat(3, 1fr); }
+}

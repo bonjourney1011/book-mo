@@ -1,6 +1,7 @@
 import { SITE_CONFIG, messengerUrl } from './site-config.js';
 import { isApiConfigured } from './booking-api-client.js';
 import { initBookingFlow } from './booking-form-controller.js';
+import { initLandingMotion } from './landing-motion.js';
 
 // Where the visitor came from (?src=fb / ?src=zalo ...), stored with the booking.
 const source = (new URLSearchParams(location.search).get('src') || '').replace(/[^a-z0-9_-]/gi, '').slice(0, 30);
@@ -15,6 +16,7 @@ document.querySelectorAll('[data-messenger-link]').forEach((link) => {
 });
 
 const booking = document.querySelector('[data-booking]');
+initLandingMotion(booking);
 if (isApiConfigured()) {
   initBookingFlow({ root: booking, source });
 } else {

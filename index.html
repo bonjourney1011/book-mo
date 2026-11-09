@@ -19,70 +19,152 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Lora:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/base-tokens-and-intro.css">
+  <link rel="stylesheet" href="assets/css/landing-story-sections.css">
   <link rel="stylesheet" href="assets/css/booking-steps.css">
+  <!-- Lets CSS hide scroll-reveal blocks only when JS will reveal them. -->
+  <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+  <svg width="0" height="0" class="icon-sprite" aria-hidden="true">
+    <symbol id="i-career" viewBox="0 0 24 24"><path d="M4 17l6-6 4 4 6-8"/><path d="M14 7h6v6"/></symbol>
+    <symbol id="i-dash" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 16v-4M12 16V8M16 16v-6"/></symbol>
+    <symbol id="i-skin" viewBox="0 0 24 24"><path d="M12 3c3 4 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-7 6-11z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5"/></symbol>
+    <symbol id="i-sigma" viewBox="0 0 24 24"><path d="M18 5H6l6 7-6 7h12"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="M8 8l-5 4 5 4M16 8l5 4-5 4M14 5l-4 14"/></symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  </svg>
   <a class="skip-link" href="#dat-lich">Tới phần đặt lịch</a>
 
-  <header class="intro">
-    <div class="wrap intro__inner">
-      <img class="intro__banner" src="assets/images/banner-mo-thuan-go-roi-45-phut.jpg" width="1536" height="804" fetchpriority="high"
+  <header class="hero">
+    <div class="wrap wrap--wide">
+      <img class="hero__banner" src="assets/images/banner-mo-thuan-go-roi-45-phut.jpg" width="1536" height="804" fetchpriority="high"
         alt="Mo Thuần, Data Analyst. Chuyển ngành sang data, chọn sản phẩm chăm sóc da, thống kê và kinh tế lượng, hoặc chỉ cần người lắng nghe.">
       <!-- The banner already shows the eyebrow and headline; keep the text for search engines and screen readers. -->
-      <p class="intro__eyebrow visually-hidden">Mo Thuần · Data Analyst</p>
-      <h1 class="intro__title visually-hidden">Bạn đang kẹt ở đâu? Mo gỡ cùng bạn trong 45 phút.</h1>
-      <p class="intro__lede">Mo là Data Analyst, có kinh nghiệm phân tích dữ liệu ngành làm đẹp. Mo từng dạy thống kê, kinh tế vi mô, vĩ mô, kinh tế lượng và lập trình cho học viên cao học và sinh viên, và dạy Toán, Lý ôn thi đại học. Bạn cần giải quyết vấn đề gì, cứ đặt lịch để trao đổi.</p>
-      <div class="intro__actions">
-        <a class="btn btn--ink" href="#dat-lich">Chọn giờ</a>
-        <a class="btn btn--ghost" href="#" data-portfolio-link target="_blank" rel="noopener">Xem Mo đã làm gì</a>
+      <p class="visually-hidden">Mo Thuần · Data Analyst</p>
+      <h1 class="visually-hidden">Bạn đang kẹt ở đâu? Mo gỡ cùng bạn trong 45 phút.</h1>
+      <div class="hero__bar" data-hero-cta>
+        <div>
+          <p class="hero__lede">Một cuộc gọi riêng 45 phút. Bạn mang theo chỗ đang kẹt, Mo cùng bạn gỡ thành việc làm được ngay.</p>
+          <p class="hero__meta">100.000đ · Google Meet · Mo xác nhận trong 24 giờ</p>
+        </div>
+        <div class="hero__action">
+          <a class="btn btn--ink btn--big" href="#dat-lich">Chọn giờ gặp Mo <svg class="icon"><use href="#i-arrow"/></svg></a>
+          <p class="next-slot" data-next-slot hidden><span class="next-slot__dot"></span><span data-next-slot-text></span></p>
+        </div>
       </div>
     </div>
   </header>
 
   <main>
-    <section class="wrap section" aria-labelledby="giup-gi">
-      <h2 id="giup-gi" class="section__title">Mo giúp được gì</h2>
-      <div class="cards">
-        <article class="card">
-          <h3 class="card__title">Chuyển ngành sang data</h3>
-          <p>Lộ trình học, portfolio, CV và câu hỏi phỏng vấn. Mo đi từ kinh tế tài chính sang data, nên biết chỗ nào nên bỏ qua.</p>
-        </article>
-        <article class="card">
-          <h3 class="card__title">Số liệu kinh doanh và dashboard</h3>
-          <p>Bạn có file bán hàng hay báo cáo Power BI đang kẹt. Mo chỉ bạn cách nhìn ra điều gì đang kéo số lên hay xuống, và góp ý cách thiết kế báo cáo.</p>
-        </article>
-        <article class="card">
-          <h3 class="card__title">Chọn sản phẩm chăm sóc da</h3>
-          <p>Mo có kinh nghiệm phân tích dữ liệu ngành làm đẹp và đang làm trang so sánh sản phẩm theo thành phần. Bạn kể làn da và ngân sách, Mo cùng bạn lọc ra vài sản phẩm hợp, bỏ qua lời quảng cáo.</p>
-          <a class="card__link" href="#" data-beauty-link target="_blank" rel="noopener">Xem Mo Beauty Analyst</a>
-        </article>
-        <article class="card">
-          <h3 class="card__title">Kinh tế học, thống kê, kinh tế lượng</h3>
-          <p>Mo từng dạy kinh tế vi mô, vĩ mô, thống kê và kinh tế lượng cho học viên cao học và sinh viên. Bạn mang phần đang kẹt: khái niệm khó, chọn kiểm định, chạy hồi quy, đọc kết quả.</p>
-        </article>
-        <article class="card">
-          <h3 class="card__title">Lập trình</h3>
-          <p>Mo từng dạy lập trình cho sinh viên. Bạn mang đoạn code đang lỗi hoặc bài đang bí. Mo cũng chia sẻ cách dựng trang web nhỏ bằng công cụ miễn phí, như trang đặt lịch này.</p>
-        </article>
-        <article class="card">
-          <h3 class="card__title">Toán, Lý ôn thi đại học</h3>
-          <p>Mo từng dạy Toán, Lý ôn thi đại học. Mo cùng bạn tìm phần đang hổng, lên lộ trình ôn và cách làm đề trong thời gian còn lại.</p>
-        </article>
+    <section class="section" aria-labelledby="ket">
+      <div class="wrap wrap--wide">
+        <p class="eyebrow" data-reveal>Bắt đầu từ bạn</p>
+        <h2 id="ket" class="section__title" data-reveal>Bạn có đang ở <span class="scribble">một trong những chỗ này</span>?</h2>
+        <ul class="pains">
+          <li class="pain" data-reveal>Muốn chuyển sang data nhưng không biết học gì trước.</li>
+          <li class="pain" data-reveal>Có file bán hàng, có dashboard, mà vẫn không biết số giảm vì đâu.</li>
+          <li class="pain" data-reveal>Chạy hồi quy ra bảng kết quả, nhưng không biết đọc thế nào.</li>
+          <li class="pain" data-reveal>Da kích ứng, tủ đầy sản phẩm, không biết nên bỏ cái nào.</li>
+          <li class="pain" data-reveal>Còn vài tháng thi đại học, không biết mình hổng chỗ nào.</li>
+          <li class="pain pain--soft" data-reveal>Không có vấn đề gì cụ thể. Chỉ muốn có người nghe.</li>
+        </ul>
+        <p class="turn" data-reveal>Tự mò một mình có khi mất cả tuần. Nói với đúng người, 45 phút đủ để thấy hướng đi.</p>
       </div>
+    </section>
 
-      <p class="anything">Vấn đề của bạn không nằm trong danh sách trên? Bạn cứ đặt lịch. Mo nghe trước, rồi cùng bạn tìm hướng gỡ.</p>
-
-      <div class="listen">
-        <h3 class="listen__title">Hoặc bạn chỉ cần một người lắng nghe</h3>
-        <p>Không cần chủ đề. Không cần chuẩn bị. Mo nghe, hỏi lại khi bạn muốn, và không khuyên nếu bạn không hỏi.</p>
+    <section class="section section--raised" aria-labelledby="mo-la-ai">
+      <div class="wrap wrap--wide story">
+        <div class="story__quote" data-reveal>
+          <p class="eyebrow">Mo là ai</p>
+          <h2 id="mo-la-ai" class="story__title">“Phần lớn chỗ kẹt không cần thêm một khoá học. Nó cần một người hỏi đúng câu.”</h2>
+        </div>
+        <div class="story__body" data-reveal>
+          <p>Mo đi từ kinh tế tài chính sang làm Data Analyst, nên Mo biết phần nào đáng học trước và phần nào bỏ qua được.</p>
+          <p>Mo từng dạy thống kê, kinh tế vi mô, vĩ mô, kinh tế lượng và lập trình cho học viên cao học và sinh viên. Mo cũng dạy Toán, Lý ôn thi đại học.</p>
+          <p>Hiện Mo phân tích dữ liệu ngành làm đẹp và đang làm trang so sánh sản phẩm chăm sóc da theo thành phần.</p>
+          <ul class="creds">
+            <li>Data Analyst</li><li>Dạy cao học, đại học</li><li>Toán, Lý ôn thi</li><li>Dữ liệu ngành làm đẹp</li>
+          </ul>
+          <a class="text-link" href="#" data-portfolio-link target="_blank" rel="noopener">Xem Mo đã làm gì <svg class="icon"><use href="#i-arrow"/></svg></a>
+        </div>
       </div>
+    </section>
 
-      <p class="quiet"><strong>Kín tiếng.</strong> Mo không ghi âm, không ghi chép lại nội dung, không kể với ai. Sau buổi nói chuyện, Mo chỉ giữ tên, email và giờ hẹn để đối chiếu thanh toán.</p>
+    <section class="section" aria-labelledby="giup-gi">
+      <div class="wrap wrap--wide">
+        <p class="eyebrow" data-reveal>Chủ đề</p>
+        <h2 id="giup-gi" class="section__title" data-reveal>Mo giúp được gì</h2>
+        <div class="cards">
+          <article class="card" data-reveal>
+            <svg class="icon card__icon"><use href="#i-career"/></svg>
+            <h3 class="card__title">Chuyển ngành sang data</h3>
+            <p>Lộ trình học, portfolio, CV và câu hỏi phỏng vấn, đi theo thứ tự phù hợp với bạn.</p>
+          </article>
+          <article class="card" data-reveal>
+            <svg class="icon card__icon"><use href="#i-dash"/></svg>
+            <h3 class="card__title">Số liệu kinh doanh và dashboard</h3>
+            <p>Nhìn ra điều gì đang kéo số lên hay xuống, và cách thiết kế báo cáo Power BI dễ đọc.</p>
+          </article>
+          <article class="card" data-reveal>
+            <svg class="icon card__icon"><use href="#i-skin"/></svg>
+            <h3 class="card__title">Chọn sản phẩm chăm sóc da</h3>
+            <p>Bạn kể làn da và ngân sách. Mo cùng bạn lọc vài sản phẩm hợp theo thành phần, bỏ qua lời quảng cáo.</p>
+            <a class="card__link" href="#" data-beauty-link target="_blank" rel="noopener">Xem Mo Beauty Analyst</a>
+          </article>
+          <article class="card" data-reveal>
+            <svg class="icon card__icon"><use href="#i-sigma"/></svg>
+            <h3 class="card__title">Kinh tế học, thống kê, kinh tế lượng</h3>
+            <p>Khái niệm khó, chọn kiểm định, chạy hồi quy, đọc kết quả. Bạn mang phần đang kẹt tới.</p>
+          </article>
+          <article class="card" data-reveal>
+            <svg class="icon card__icon"><use href="#i-code"/></svg>
+            <h3 class="card__title">Lập trình</h3>
+            <p>Đoạn code đang lỗi, bài đang bí, hoặc cách dựng trang web nhỏ miễn phí như trang này.</p>
+          </article>
+          <article class="card" data-reveal>
+            <svg class="icon card__icon"><use href="#i-pencil"/></svg>
+            <h3 class="card__title">Toán, Lý ôn thi đại học</h3>
+            <p>Tìm phần đang hổng, lên lộ trình ôn và cách làm đề trong thời gian còn lại.</p>
+          </article>
+        </div>
+        <p class="anything" data-reveal>Vấn đề của bạn không có ở đây? Bạn cứ đặt lịch. Mo nghe trước, rồi cùng bạn tìm hướng gỡ.</p>
+      </div>
+    </section>
+
+    <section class="section section--raised" aria-labelledby="45-phut">
+      <div class="wrap wrap--wide">
+        <p class="eyebrow" data-reveal>Trong buổi gặp</p>
+        <h2 id="45-phut" class="section__title" data-reveal><span class="scribble">45 phút</span> của bạn diễn ra thế nào</h2>
+        <ol class="timeline">
+          <li class="timeline__item" data-reveal><span class="timeline__time">Phút 0–10</span><strong>Bạn kể</strong><p>Mo nghe và hỏi lại để thấy rõ chỗ đang kẹt.</p></li>
+          <li class="timeline__item" data-reveal><span class="timeline__time">Phút 10–35</span><strong>Cùng gỡ</strong><p>Hai bên cùng xem file, đoạn code, bài tập hoặc câu chuyện của bạn qua chia sẻ màn hình.</p></li>
+          <li class="timeline__item" data-reveal><span class="timeline__time">Phút 35–45</span><strong>Chốt hướng đi</strong><p>Bạn ra về với 1 đến 3 việc cụ thể để làm tiếp.</p></li>
+        </ol>
+        <p class="timeline__note" data-reveal>Nếu bạn chỉ cần người nghe, cả 45 phút là của bạn.</p>
+      </div>
+    </section>
+
+    <section class="promise" aria-labelledby="lang-nghe">
+      <div class="wrap wrap--wide promise__inner" data-reveal>
+        <div>
+          <h2 id="lang-nghe" class="promise__title">Hoặc bạn chỉ cần một người lắng nghe</h2>
+          <p>Không cần chủ đề. Không cần chuẩn bị. Mo nghe, hỏi lại khi bạn muốn, và không khuyên nếu bạn không hỏi.</p>
+        </div>
+        <ul class="promise__list">
+          <li><svg class="icon"><use href="#i-check"/></svg>Không ghi âm</li>
+          <li><svg class="icon"><use href="#i-check"/></svg>Không ghi chép lại nội dung</li>
+          <li><svg class="icon"><use href="#i-check"/></svg>Không kể với ai</li>
+          <li><svg class="icon"><use href="#i-check"/></svg>Chỉ giữ tên, email và giờ hẹn để đối chiếu thanh toán</li>
+        </ul>
+      </div>
     </section>
 
     <section id="dat-lich" class="wrap section booking" data-booking aria-labelledby="dat-lich-title">
-      <h2 id="dat-lich-title" class="section__title">Đặt lịch</h2>
-      <p class="booking__lede">Một cuộc gọi riêng 45 phút qua Google Meet, <strong>100.000đ</strong>. Bạn chọn giờ, chuyển khoản, gửi ảnh chuyển khoản và viết vài dòng về điều muốn trao đổi. Mo xác nhận trong 24 giờ.</p>
+      <p class="eyebrow">Đặt lịch</p>
+      <h2 id="dat-lich-title" class="section__title">Chọn giờ gặp Mo</h2>
+      <p class="booking__lede">45 phút qua Google Meet, <strong>100.000đ</strong>. Bạn chọn giờ, chuyển khoản, gửi ảnh chuyển khoản và viết vài dòng về điều muốn trao đổi. Mo xác nhận trong 24 giờ.</p>
       <ol class="stepper" aria-label="Các bước">
         <li class="stepper__item" data-step-marker="1">Chọn giờ</li>
         <li class="stepper__item" data-step-marker="2">Thông tin</li>
@@ -145,22 +227,29 @@
 
     <section class="wrap section faq" aria-labelledby="hoi-nhanh">
       <h2 id="hoi-nhanh" class="section__title">Hỏi nhanh</h2>
-      <dl class="faq__list">
-        <dt>Gọi bằng gì?</dt>
-        <dd>Google Meet. Link gặp nằm trong email xác nhận của Mo.</dd>
-        <dt>Sao phải chuyển khoản trước?</dt>
-        <dd>Để cả hai giữ đúng giờ đã hẹn. Nếu Mo bận đột xuất, Mo hoàn tiền hoặc xếp lại giờ cho bạn.</dd>
-        <dt>Mo kiểm tra ảnh chuyển khoản khi nào?</dt>
-        <dd>Mỗi sáng. Vì vậy bạn cần đặt trước ít nhất 1 ngày.</dd>
-        <dt>Cần đổi giờ?</dt>
-        <dd>Reply email xác nhận hoặc nhắn Mo. Đổi trước 12 giờ là được.</dd>
-      </dl>
+      <details class="faq__item"><summary>Gọi bằng gì?</summary><p>Google Meet. Link gặp nằm trong email xác nhận của Mo.</p></details>
+      <details class="faq__item"><summary>Sao phải chuyển khoản trước?</summary><p>Để cả hai giữ đúng giờ đã hẹn. Nếu Mo bận đột xuất, Mo hoàn tiền hoặc xếp lại giờ cho bạn.</p></details>
+      <details class="faq__item"><summary>Mo kiểm tra ảnh chuyển khoản khi nào?</summary><p>Mỗi sáng. Vì vậy bạn cần đặt trước ít nhất 1 ngày.</p></details>
+      <details class="faq__item"><summary>Cần đổi giờ?</summary><p>Reply email xác nhận hoặc nhắn Mo. Đổi trước 12 giờ là được.</p></details>
+    </section>
+
+    <section class="final-cta" data-final-cta>
+      <div class="wrap wrap--wide final-cta__inner" data-reveal>
+        <h2 class="final-cta__title">Chỗ kẹt bạn mang theo cả tháng, có khi chỉ cần 45 phút để gỡ.</h2>
+        <a class="btn btn--light btn--big" href="#dat-lich">Chọn giờ gặp Mo <svg class="icon"><use href="#i-arrow"/></svg></a>
+        <p class="final-cta__meta">100.000đ · Google Meet · Kín tiếng</p>
+      </div>
     </section>
   </main>
 
-  <footer class="footer wrap">
+  <footer class="footer wrap wrap--wide">
     <p>Mo Thuần · <a href="#" data-portfolio-link target="_blank" rel="noopener">Portfolio</a> · <a href="#" data-messenger-link target="_blank" rel="noopener">Messenger</a></p>
   </footer>
+
+  <div class="sticky-cta" data-sticky-cta aria-hidden="true">
+    <span class="sticky-cta__text"><strong>45 phút</strong> · 100.000đ</span>
+    <a class="btn btn--ink" href="#dat-lich" tabindex="-1">Chọn giờ</a>
+  </div>
 
   <script type="module" src="assets/js/app-main.js"></script>
 </body>

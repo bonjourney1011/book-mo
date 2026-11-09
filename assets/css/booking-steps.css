@@ -1,6 +1,8 @@
 /* Booking section: stepper, slot picker, form, payment card, upload, done. */
 .booking { scroll-margin-top: 16px; }
-.booking__lede { margin: -4px 0 22px; max-width: 60ch; color: var(--ink-soft); }
+/* Narrow column for the form: center its heading so it lines up with the wide sections around it */
+.booking > .eyebrow, .booking > .section__title, .booking__lede { text-align: center; margin-inline: auto; }
+.booking__lede { margin-top: -8px; margin-bottom: 26px; max-width: 56ch; color: var(--ink-soft); }
 
 .stepper { display: flex; gap: 6px; list-style: none; margin: 0 0 22px; padding: 0; counter-reset: step; }
 .stepper__item {
