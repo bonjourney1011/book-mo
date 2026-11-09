@@ -1,5 +1,6 @@
 /* Booking section: stepper, slot picker, form, payment card, upload, done. */
 .booking { scroll-margin-top: 16px; }
+.booking__lede { margin: -4px 0 22px; max-width: 60ch; color: var(--ink-soft); }
 
 .stepper { display: flex; gap: 6px; list-style: none; margin: 0 0 22px; padding: 0; counter-reset: step; }
 .stepper__item {
@@ -70,7 +71,14 @@ textarea.field__input { resize: vertical; min-height: 110px; }
   display: grid; gap: 6px; padding: 18px; margin-bottom: 14px;
   border: 2px dashed var(--rule); border-radius: var(--radius); background: var(--paper); cursor: pointer;
 }
-.upload:hover { border-color: var(--accent); }
+.upload:hover, .upload.is-dragover { border-color: var(--accent); }
+.upload.is-dragover { background: var(--card, #fff); }
+
+.handoff { margin: 0 0 14px; padding: 12px 16px; border: 1px solid var(--rule); border-radius: var(--radius); }
+.handoff__toggle { cursor: pointer; font-weight: 600; color: var(--accent); }
+.handoff__text { margin: 10px 0; color: var(--ink-soft); font-size: .92rem; max-width: 52ch; }
+.handoff__qr { display: block; margin: 0 auto; max-width: 100%; height: auto; image-rendering: pixelated; background: #fff; border-radius: 8px; }
+.handoff__qr:not([src]) { display: none; }
 .upload__title { font-weight: 600; }
 .upload__hint { font-size: .85rem; color: var(--ink-faint); }
 .upload__input { margin-top: 6px; font: inherit; }
