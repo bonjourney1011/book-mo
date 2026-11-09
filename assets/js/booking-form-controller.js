@@ -35,7 +35,7 @@ export function initBookingFlow({ root, source }) {
   const handoffQr = $('[data-handoff-qr]');
   const resumeSummary = $('[data-resume-summary]');
   const startedAt = performance.now();
-  const state = { slot: null, quote: null, bill: null, paidCode: '', requestId: newRequestId(), carriedFillMs: 0 };
+  const state = { slot: null, quote: null, bill: null, paidCode: '', requestId: newRequestId(), handoffRequestId: '', carriedFillMs: 0 };
   let stopPhoneWatch = () => {};
 
   const show = (n, { scroll = true } = {}) => {
@@ -68,8 +68,8 @@ export function initBookingFlow({ root, source }) {
     slotStatus.textContent = message || t('Mỗi buổi {n} phút. Bạn chọn ngày rồi chọn giờ.', { n: data.slotMinutes });
     renderSlotPicker(slotsBox, data.days, (slot) => {
       state.slot = slot;
-      // A new slot is a new booking: a replayed id must never return an older slot's answer.
-      state.requestId = newRequestId();
+      // New slot = new id, except on a phone opened from the QR: the computer is watching that id (only a successful booking caches it).
+      state.requestId = state.handoffRequestId || newRequestId();
       chosenText.textContent = slot.label;
       show(2);
     });
@@ -176,7 +176,7 @@ export function initBookingFlow({ root, source }) {
     state.slot = { key: draft.k, label: '' };
     state.paidCode = draft.c;
     // Same request id as the computer: if both devices send, the server keeps one booking.
-    state.requestId = draft.r || state.requestId;
+    state.requestId = state.handoffRequestId = draft.r || state.requestId;
     state.carriedFillMs = draft.f;
     slotStatus.textContent = t('Đang mở lịch bạn đặt trên máy tính…');
     root.scrollIntoView({ block: 'start' });
