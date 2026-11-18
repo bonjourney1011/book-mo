@@ -1,6 +1,6 @@
 import { t } from './ui-text.js';
-import { fetchSlots, requestQuote, submitBooking } from './booking-api-client.js';
-import { renderSlotPicker } from './slot-picker.js';
+import { requestQuote, submitBooking } from './booking-api-client.js';
+import { createSlotStep } from './slot-step.js';
 import { renderPaymentCard } from './payment-qr-view.js';
 import { resizeBillImage } from './bill-image-resizer.js';
 import { renderBookingSuccess } from './booking-success-view.js';
@@ -57,30 +57,25 @@ export function initBookingFlow({ root, source }) {
     return { name: data.get('name'), email: data.get('email'), purpose: data.get('purpose'), website: data.get('website') };
   };
 
-  async function loadSlots(message) {
-    slotStatus.textContent = message || t('Đang tải khung giờ trống…');
-    slotsBox.replaceChildren();
-    const data = await fetchSlots();
-    // The landing hero shows the nearest free slot from the same response (no second request).
-    root.dispatchEvent(new CustomEvent('slots-loaded', { detail: data }));
-    if (!data) { slotStatus.textContent = t('Chưa tải được lịch. Bạn tải lại trang hoặc nhắn Mo nhé.'); return; }
-    if (!data.open) { slotStatus.textContent = t('Mo đang tạm đóng lịch. Bạn ghé lại sau nhé.'); return; }
-    slotStatus.textContent = message || t('Mỗi buổi {n} phút. Bạn chọn ngày rồi chọn giờ.', { n: data.slotMinutes });
-    renderSlotPicker(slotsBox, data.days, (slot) => {
+  const slotStep = createSlotStep({
+    root, statusBox: slotStatus, listBox: slotsBox, isActive: () => !steps[0].hidden,
+    onPick: (slot) => {
       state.slot = slot;
       // New slot = new id, except on a phone opened from the QR: the computer is watching that id (only a successful booking caches it).
       state.requestId = state.handoffRequestId || newRequestId();
       chosenText.textContent = slot.label;
       show(2);
-    });
-  }
+    }
+  });
+  /** Back to the calendar after the chosen slot was taken or held by someone else. */
+  const slotGone = (message) => { state.slot = null; slotStep.forget(); show(1); return slotStep.load(message); };
 
   /** Asks the API for the booking code + bank details. Returns true when the quote is ready. */
   async function quote(takenMessage) {
     formError.textContent = '';
     const result = await requestQuote({ slot: state.slot.key, ...contact(), fillMs: fillMs(), source });
     if (!result.ok) {
-      if (result.slotTaken) { state.slot = null; await loadSlots(takenMessage || result.error); show(1); return false; }
+      if (result.slotTaken) { await slotGone(takenMessage || result.error); return false; }
       formError.textContent = result.error;
       show(2);
       return false;
@@ -155,12 +150,7 @@ export function initBookingFlow({ root, source }) {
     submitButton.disabled = false;
     submitButton.textContent = t('Gửi lịch');
     if (result.ok) { finish(result); return; }
-    if (result.slotTaken) {
-      state.slot = null;
-      await loadSlots(t('Khung giờ vừa có người đặt. Bạn chọn khung khác, không cần chuyển khoản lại, Mo sẽ đối chiếu.'));
-      show(1);
-      return;
-    }
+    if (result.slotTaken) { await slotGone(`${result.error} ${t('Bạn không cần chuyển khoản lại, Mo sẽ đối chiếu theo ảnh bạn gửi.')}`); return; }
     billError.textContent = result.error;
   });
 
@@ -193,7 +183,7 @@ export function initBookingFlow({ root, source }) {
   }
 
   show(1, { scroll: false });
-  loadSlots();
+  slotStep.load();
   const draft = takeHandoffDraft();
   if (draft) resumeFromHandoff(draft);
 }

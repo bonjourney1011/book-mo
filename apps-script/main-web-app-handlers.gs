@@ -11,7 +11,10 @@ var PUBLIC_SLOTS_CACHE_SECONDS = 30;
 var REQUEST_REPLAY_SECONDS = 21600;
 var BUSY_MESSAGE = 'Hệ thống đang bận, bạn thử lại sau ít phút nhé.';
 
-/** ?action=... -> owner action page; otherwise public slots JSON cached ~30 s. */
+/**
+ * ?action=... -> owner action page; otherwise the public week calendar cached ~30 s: every slot in range
+ * with status free / booked / held. Booking and placing a hold clear the cache, so the page sees them at once.
+ */
 function doGet(e) {
   var params = (e && e.parameter) || {};
   if (params.action) return renderActionPage_(params);  // owner action page (HtmlService)
@@ -27,7 +30,7 @@ function doGet(e) {
       price: Number(ctx.config.price) || 100000,
       slotMinutes: settings.slotMinutes,
       leadDays: settings.leadDays,
-      days: groupSlotsByDay(ctx.available)
+      days: groupSlotsByDay(ctx.calendar, heldSlotKeys_(cache, ctx.calendar))
     };
     cache.put(PUBLIC_SLOTS_CACHE_KEY, JSON.stringify(body), PUBLIC_SLOTS_CACHE_SECONDS);
     return body;
@@ -52,14 +55,15 @@ function doPost(e) {
       var replay = action === 'book' && requestId && cache.get('req_' + requestId);
       if (replay) return JSON.parse(replay);
       var ctx = loadBookingContext_(new Date());
-      if (action === 'quote') return handleQuote_(payload, ctx);
+      if (action === 'quote') return handleQuote_(payload, ctx, cache);
 
       var recentCount = Number(cache.get('bookings_recent') || 0);
       if (recentCount >= GLOBAL_MAX_BOOKINGS) return { ok: false, error: BUSY_MESSAGE };
-      var result = handleBook_(payload, ctx);
+      var result = handleBook_(payload, ctx, cache);
       if (!result.ok) return result;
       response = result.response;
       saved = result.booking;
+      releaseHold_(cache, saved.slot.key, saved.email);
       cache.put('bookings_recent', String(recentCount + 1), GLOBAL_WINDOW_SECONDS);
       if (requestId) cache.put('req_' + requestId, JSON.stringify(response), REQUEST_REPLAY_SECONDS);
       cache.remove(PUBLIC_SLOTS_CACHE_KEY);
@@ -75,26 +79,33 @@ function doPost(e) {
 function loadBookingContext_(now) {
   var config = readConfig_();
   var bookings = readBookings_();
-  return { config: config, bookings: bookings, available: generateSlots(readSlotWindows_(), bookings, config, now), now: now };
+  var calendar = generateSlotCalendar(readSlotWindows_(), bookings, config, now);
+  var available = calendar.filter(function (slot) { return !slot.taken; });
+  return { config: config, bookings: bookings, calendar: calendar, available: available, now: now };
 }
 
-/** Step 3: validates slot + name + email and returns the transfer details. Writes nothing. */
-function handleQuote_(payload, ctx) {
+/** Step 3: validates slot + name + email, holds the slot for this email, returns the transfer details. No Sheet writes. */
+function handleQuote_(payload, ctx, cache) {
   var checked = validateQuote(payload, ctx);
   if (!checked.ok) return checked;
+  if (isHeldByOther(holdOwner_(cache, checked.slot.key), checked.email)) return fail(SLOT_HELD_MESSAGE, { slotTaken: true });
+  placeHold_(cache, checked.slot.key, checked.email);
+  cache.remove(PUBLIC_SLOTS_CACHE_KEY);
   var code = buildBookingCode(checked.slot.start);
   return {
     ok: true,
     bookingCode: code,
     slotLabel: formatSlotLabel(checked.slot.start, checked.slot.end),
-    payment: buildPaymentInfo(ctx.config, code)
+    payment: buildPaymentInfo(ctx.config, code),
+    holdMinutes: HOLD_MINUTES
   };
 }
 
 /** Step 5: bill to Drive first (fail = nothing written), then the Sheet row. Runs inside the lock. */
-function handleBook_(payload, ctx) {
+function handleBook_(payload, ctx, cache) {
   var checked = validateBooking(payload, ctx);
   if (!checked.ok) return checked;
+  if (isHeldByOther(holdOwner_(cache, checked.slot.key), checked.email)) return fail(SLOT_HELD_MESSAGE, { slotTaken: true });
   if (countActiveBookingsByEmail_(ctx.bookings, checked.email) >= MAX_ACTIVE_PER_EMAIL) {
     return { ok: false, error: 'Email này đã có ' + MAX_ACTIVE_PER_EMAIL + ' lịch đang chờ. Bạn reply email xác nhận nếu cần đổi.' };
   }

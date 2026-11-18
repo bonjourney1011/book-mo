@@ -63,11 +63,12 @@ function isActiveBooking(booking) {
 }
 
 /**
+ * Every slot in [now + lead, now + horizon], booked or not, for the public week calendar.
  * windows: [{ weekday: 'T7', start: '09:00', end: '12:00', active: true }]
  * bookings: [{ slotKey, status }]
- * Returns sorted [{ key, start, end }].
+ * Returns sorted [{ key, start, end, taken }]; taken = an active (not cancelled) booking holds it.
  */
-function generateSlots(windows, bookings, config, now) {
+function generateSlotCalendar(windows, bookings, config, now) {
   var settings = slotSettings(config);
   var earliest = addMinutes(now, settings.leadDays * 24 * 60).getTime();
   var latest = addMinutes(now, settings.horizonDays * 24 * 60).getTime();
@@ -88,8 +89,8 @@ function generateSlots(windows, bookings, config, now) {
       var windowEnd = dayAt(day, to.hours, to.minutes).getTime();
       while (addMinutes(t, settings.slotMinutes).getTime() <= windowEnd) {
         var ms = t.getTime();
-        if (ms >= earliest && ms <= latest && !taken[slotKey(t)]) {
-          out.push({ key: slotKey(t), start: t, end: addMinutes(t, settings.slotMinutes) });
+        if (ms >= earliest && ms <= latest) {
+          out.push({ key: slotKey(t), start: t, end: addMinutes(t, settings.slotMinutes), taken: Boolean(taken[slotKey(t)]) });
         }
         t = addMinutes(t, settings.slotMinutes + settings.bufferMinutes);
       }
@@ -99,8 +100,16 @@ function generateSlots(windows, bookings, config, now) {
   return out;
 }
 
-/** Public shape for the page: no names, no emails, no bank data. */
-function groupSlotsByDay(slots) {
+/** Slots a visitor can book right now: the calendar minus booked slots. Returns sorted [{ key, start, end }]. */
+function generateSlots(windows, bookings, config, now) {
+  return generateSlotCalendar(windows, bookings, config, now).filter(function (slot) { return !slot.taken; });
+}
+
+/**
+ * Public shape for the page: no names, no emails, no bank data.
+ * status: 'free' | 'booked' (active booking) | 'held' (someone is on the payment step; heldKeys = { key: true }).
+ */
+function groupSlotsByDay(slots, heldKeys) {
   var days = [];
   var byDate = {};
   slots.forEach(function (slot) {
@@ -109,7 +118,8 @@ function groupSlotsByDay(slots) {
       byDate[date] = { date: date, label: formatDayLabel(slot.start), slots: [] };
       days.push(byDate[date]);
     }
-    byDate[date].slots.push({ key: slot.key, label: formatHm(slot.start) + '–' + formatHm(slot.end) });
+    var status = slot.taken ? 'booked' : heldKeys && heldKeys[slot.key] ? 'held' : 'free';
+    byDate[date].slots.push({ key: slot.key, label: formatHm(slot.start) + '–' + formatHm(slot.end), status: status });
   });
   return days;
 }

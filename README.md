@@ -21,12 +21,13 @@ tests/                     test logic chia khung giờ + kiểm tra form (npm te
 
 1. Vào [sheets.new](https://sheets.new), đặt tên ví dụ `Book Mo – Lịch`.
 2. Trong Sheet, mở **Tiện ích mở rộng → Apps Script**.
-3. Tạo 10 file script (nút **+** cạnh "Tệp" → **Tập lệnh**), đặt tên và dán nội dung từ thư mục `apps-script/`. Không cần gõ đuôi `.gs`.
+3. Tạo 11 file script (nút **+** cạnh "Tệp" → **Tập lệnh**), đặt tên và dán nội dung từ thư mục `apps-script/`. Không cần gõ đuôi `.gs`.
    - `main-web-app-handlers`
    - `sheet-repository`
    - `text-helpers`
    - `slot-generation`
    - `booking-validation`
+   - `slot-holds`
    - `bill-upload-drive`
    - `calendar-and-booker-email`
    - `daily-digest-and-actions`
@@ -109,6 +110,9 @@ Khi đăng link, thêm `?src=fb`, `?src=zalo`… để cột `source` ghi lại 
 | Nghỉ một ngày cụ thể | Chưa hỗ trợ theo ngày. Tạm bỏ tích khung đó trong tuần, hoặc tự đặt một lịch giả bằng email của bạn rồi Huỷ khi cần mở lại |
 | Duyệt/huỷ | Link trong email 8h sáng. Sửa tay cột `status` cũng trả lại khung giờ nhưng **không** xoá event và **không** email khách |
 | Khách đặt trên máy tính nhưng ảnh bill ở điện thoại | Bước 4 có mã QR mở sẵn lịch trên điện thoại. Điện thoại gửi xong, máy tính tự sang bước cuối: trang hỏi `action: 'status'` mỗi 6 giây trong tối đa 10 phút, chỉ đọc cache, không ghi Sheet, không gửi email |
+| Ai đang giữ hay đã đặt khung nào | Lịch trên trang hiện khung *Chờ duyệt*/*Đã xác nhận* màu xám gạch chéo ("Đã có người đặt"), khung có người đang ở bước chuyển khoản gạch chéo xanh ("Đang giữ chỗ"). Không lộ tên hay email |
+| Giữ chỗ khi chuyển khoản | Khách sang bước mã QR thì khung được giữ 15 phút cho email đó (chỉ trong cache, không ghi Sheet). Chọn khung khác thì khung cũ nhả ra; gửi lịch xong thì dòng *Chờ duyệt* thay chỗ giữ. Đổi thời gian: `HOLD_MINUTES` trong `slot-holds.gs` |
+| Trang đang mở có thấy người khác vừa đặt không | Có, chậm tối đa khoảng 1,5 phút: lịch tự tải lại mỗi 60 giây khi khách đang ở bước chọn giờ (và ngay khi quay lại tab), server cache danh sách 30 giây. Khách chọn trúng khung vừa mất thì trang báo "đã có người đặt chỗ cách đây N phút" hoặc "đang có người giữ chỗ" và cho chọn lại |
 | Khách chuyển khoản nhưng khung bị người khác lấy trước | Trang tự cho chọn khung khác, giữ ảnh bill; cột `paid_code` ghi mã đã chuyển, email tổng hợp cảnh báo lệch mã |
 
 - **Không đổi tên tab, không chèn cột vào giữa.** Cột mới chỉ thêm ở cuối tab Bookings.
@@ -129,4 +133,5 @@ npm run serve   # xem trang ở http://localhost:4173
 - gửi lại cùng một form (mạng chậm) không tạo lịch trùng;
 - link duyệt/huỷ có token riêng từng lịch, chỉ tác dụng khi lịch còn *Chờ duyệt*;
 - chống chèn công thức vào Sheet;
-- API public chỉ trả khung giờ trống và giá, không có tên, email hay số tài khoản.
+- API public chỉ trả lịch (giờ + trạng thái trống / đã đặt / đang giữ) và giá, không có tên, email hay số tài khoản;
+- giữ chỗ được kiểm tra trong lúc khoá ghi, nên hai người không thể cùng giữ một khung.

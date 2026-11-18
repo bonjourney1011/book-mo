@@ -74,12 +74,26 @@ test('slot key round-trips and the booking code comes from the slot', () => {
   assert.equal(gs.formatSlotLabel(start, gs.addMinutes(start, 45)), 'Chủ nhật 15/11 · 09:30–10:15');
 });
 
-test('groupSlotsByDay exposes only keys and labels', () => {
+test('groupSlotsByDay exposes only keys, labels and a status', () => {
   const days = gs.groupSlotsByDay(gs.generateSlots(windows, [], config, NOW));
   assert.equal(days[0].date, '2026-11-14');
   assert.equal(days[0].label, 'Thứ 7 14/11');
-  assert.deepEqual(plain(days[0].slots[0]), { key: '2026-11-14 09:00', label: '09:00–09:45' });
+  assert.deepEqual(plain(days[0].slots[0]), { key: '2026-11-14 09:00', label: '09:00–09:45', status: 'free' });
   assert.deepEqual(Object.keys(days[0]), ['date', 'label', 'slots']);
+});
+
+test('calendar keeps booked slots (greyed on the page) and marks held ones', () => {
+  const bookings = [
+    { slotKey: '2026-11-14 10:00', status: 'Chờ duyệt' },
+    { slotKey: '2026-11-14 11:00', status: 'Huỷ' }
+  ];
+  const calendar = gs.generateSlotCalendar(windows, bookings, config, NOW);
+  const sat = calendar.filter((s) => s.key.startsWith('2026-11-14')).map((s) => [s.key.slice(11), s.taken]);
+  assert.deepEqual(plain(sat), [['09:00', false], ['10:00', true], ['11:00', false]]);
+  assert.ok(!keys(gs.generateSlots(windows, bookings, config, NOW)).includes('2026-11-14 10:00'), 'booked slot is not bookable');
+
+  const days = gs.groupSlotsByDay(calendar, { '2026-11-14 09:00': true, '2026-11-14 10:00': true });
+  assert.deepEqual(plain(days[0].slots.map((s) => s.status)), ['held', 'booked', 'free'], 'booked wins over a stale hold');
 });
 
 test('settings fall back to defaults; buffer may be zero', () => {

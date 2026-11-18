@@ -1,4 +1,5 @@
 import { t } from './ui-text.js';
+import { isFree } from './slot-picker.js';
 /**
  * Landing polish: scroll reveal, the phone sticky CTA, and the "nearest free slot" line in the hero.
  * Everything degrades to a static page when IntersectionObserver is missing.
@@ -50,10 +51,11 @@ function nearestSlot(bookingRoot) {
   if (!line || !bookingRoot) return;
   bookingRoot.addEventListener('slots-loaded', (event) => {
     const data = event.detail;
-    const day = data?.open ? data.days?.[0] : null;
-    if (!day?.slots?.length) { line.hidden = true; return; }
-    const total = data.days.reduce((sum, d) => sum + d.slots.length, 0);
-    text.textContent = t('Lịch trống gần nhất: {day}, {time} · còn {n} khung trống', { day: day.label, time: day.slots[0].label.split('–')[0], n: total });
+    // Booked and held slots are in the list too (greyed in the calendar); only free ones count here.
+    const free = (data?.open ? data.days || [] : []).flatMap((day) => day.slots.filter(isFree).map((slot) => ({ day, slot })));
+    if (!free.length) { line.hidden = true; return; }
+    const [first] = free;
+    text.textContent = t('Lịch trống gần nhất: {day}, {time} · còn {n} khung trống', { day: first.day.label, time: first.slot.label.split('–')[0], n: free.length });
     line.hidden = false;
   });
 }

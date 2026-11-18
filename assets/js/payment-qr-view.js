@@ -39,7 +39,8 @@ export function renderPaymentCard(container, quote, paidCode) {
   const { payment } = quote;
   const children = [
     el('p', { class: 'pay__slot', text: quote.slotLabel }),
-    el('p', { class: 'pay__code' }, t('Mã lịch: '), el('strong', { text: quote.bookingCode }))
+    el('p', { class: 'pay__code' }, t('Mã lịch: '), el('strong', { text: quote.bookingCode })),
+    quote.holdMinutes ? el('p', { class: 'pay__hold', text: t('Mo giữ khung giờ này cho bạn {n} phút để chuyển khoản.', { n: quote.holdMinutes }) }) : null
   ];
   if (paidCode && paidCode !== quote.bookingCode) {
     children.push(el('p', { class: 'pay__note pay__note--warn', text: t('Bạn đã chuyển khoản với nội dung {code}. Không cần chuyển lại. Mo sẽ đối chiếu theo ảnh bạn gửi.', { code: paidCode }) }));

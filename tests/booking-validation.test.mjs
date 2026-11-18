@@ -100,3 +100,28 @@ test('status: booked only when the replay cache holds a successful booking', () 
   assert.deepEqual({ ...gs.bookingStatus('req-1', JSON.stringify({ ok: false, error: 'x' })) }, { ok: true, booked: false });
   assert.equal(gs.bookingStatus('', saved).ok, false);
 });
+
+test('slot taken: message says how many minutes ago the slot was booked', () => {
+  const now = new Date(2026, 10, 12, 10, 0);
+  const at = (minutesAgo) => new Date(now.getTime() - minutesAgo * 60000);
+  const bookings = [
+    { slotKey: '2026-11-14 09:00', status: 'Chờ duyệt', createdAt: at(7) },
+    { slotKey: '2026-11-14 10:00', status: 'Chờ duyệt', createdAt: at(0.2) },
+    { slotKey: '2026-11-14 11:00', status: 'Đã xác nhận', createdAt: at(600) },
+    { slotKey: '2026-11-15 09:00', status: 'Huỷ', createdAt: at(5) }
+  ];
+  assert.equal(gs.slotTakenMessage(bookings, '2026-11-14 09:00', now), 'Khung giờ này đã có người đặt chỗ cách đây 7 phút. Bạn chọn khung khác nha.');
+  assert.equal(gs.slotTakenMessage(bookings, '2026-11-14 10:00', now), gs.SLOT_TAKEN_MESSAGE);
+  assert.equal(gs.slotTakenMessage(bookings, '2026-11-14 11:00', now), 'Khung giờ này đã có người đặt chỗ. Bạn chọn khung khác nha.');
+  assert.equal(gs.slotTakenMessage(bookings, '2026-11-15 09:00', now), 'Khung giờ này không còn trống. Bạn chọn khung khác nha.', 'cancelled row does not count');
+
+  const taken = gs.validateQuote(payload(), ctx({ available: [], bookings }));
+  assert.equal(taken.slotTaken, true);
+  assert.equal(taken.error, gs.SLOT_TAKEN_MESSAGE, 'the 10:00 slot was booked 12 s ago');
+});
+
+test('hold: blocks other emails only', () => {
+  assert.equal(gs.isHeldByOther('', 'lan@example.com'), false);
+  assert.equal(gs.isHeldByOther('lan@example.com', 'lan@example.com'), false);
+  assert.equal(gs.isHeldByOther('minh@example.com', 'lan@example.com'), true);
+});

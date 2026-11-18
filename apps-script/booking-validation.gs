@@ -8,7 +8,8 @@ var MIN_FILL_MS = 3000;
 var MAX_BILL_BASE64_CHARS = 2800000;
 // base64 of the magic bytes: JPEG FF D8 FF, PNG 89 50 4E 47, WebP "RIFF"
 var BILL_MAGIC = { 'image/jpeg': '/9j/', 'image/png': 'iVBORw0KGgo', 'image/webp': 'UklGR' };
-var SLOT_TAKEN_MESSAGE = 'Khung giờ này vừa có người đặt. Bạn chọn khung khác giúp Mo nhé.';
+var SLOT_TAKEN_MESSAGE = 'Khung giờ này vừa có người đặt chỗ. Bạn chọn khung khác nha.';
+var SLOT_HELD_MESSAGE = 'Khung giờ này đang có người giữ chỗ để chuyển khoản. Bạn chọn khung khác, hoặc thử lại sau ít phút nha.';
 
 function fail(error, extra) {
   var out = { ok: false, error: error };
@@ -41,7 +42,7 @@ function validateQuote(payload, ctx) {
   var key = cleanText(payload.slot, 16);
   if (!parseSlotKey(key)) return fail('Bạn chọn một khung giờ trước nhé.');
   var slot = findAvailableSlot(ctx.available || [], key);
-  if (!slot) return fail(SLOT_TAKEN_MESSAGE, { slotTaken: true });
+  if (!slot) return fail(slotTakenMessage(ctx.bookings, key, ctx.now), { slotTaken: true });
 
   return {
     ok: true,
@@ -103,4 +104,24 @@ function bookingStatus(requestId, cachedJson) {
   } catch (err) {
     return { ok: true, booked: false };
   }
+}
+
+/**
+ * Why a slot the visitor picked is gone, with how long ago it was booked when the Sheet knows
+ * ("đã có người đặt chỗ cách đây 7 phút"). bookings = [{ slotKey, status, createdAt }].
+ */
+function slotTakenMessage(bookings, key, now) {
+  var booking = (bookings || []).filter(function (b) { return b.slotKey === key && isActiveBooking(b); })[0];
+  if (!booking) return 'Khung giờ này không còn trống. Bạn chọn khung khác nha.';
+  var created = booking.createdAt;
+  if (!created || typeof created.getTime !== 'function' || !now) return 'Khung giờ này đã có người đặt chỗ. Bạn chọn khung khác nha.';
+  var minutes = Math.floor((now.getTime() - created.getTime()) / 60000);
+  if (minutes < 1) return SLOT_TAKEN_MESSAGE;
+  if (minutes <= 180) return 'Khung giờ này đã có người đặt chỗ cách đây ' + minutes + ' phút. Bạn chọn khung khác nha.';
+  return 'Khung giờ này đã có người đặt chỗ. Bạn chọn khung khác nha.';
+}
+
+/** A payment-step hold blocks everyone except the email that placed it. holder = '' when there is no hold. */
+function isHeldByOther(holder, email) {
+  return Boolean(holder) && holder !== email;
 }
